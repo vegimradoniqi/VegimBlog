@@ -114,7 +114,7 @@ export default {
             })
         },
         logout() {
-            axios.get('/api/logout').then(()=>{
+            axios.get('/api/logout/').then(()=>{
                 this.$router.push({name:'Home'})
             }).catch((error)=>{
                 console.log(error)

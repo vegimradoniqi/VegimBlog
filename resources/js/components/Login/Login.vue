@@ -69,8 +69,12 @@ export default {
     },
     methods: {
         loginUser() {
-            axios.post('/api/login/', this.form).then(() => {
-                this.$router.push({name: "Dashboard"})
+            axios.post('/api/login/', this.form).then((res) => {
+                if (res.data.success) {
+                    this.$router.push({name: "Dashboard"})
+                }else {
+                    this.errors = res.data.data
+                }
             }).catch((error) => {
                 this.errors = error.response.data.errors;
             })

@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('login', [LoginController::class, 'login']);
 Route::get('/logout', [LoginController::class, 'logout']);
+
 Route::get('/email-verification', [VerificationController::class, 'verify'])->name('verification.verify');
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -34,7 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/blog-handle', [BlogController::class, 'blogHandle']);
     Route::get('/blog-like/{id}', [LikeController::class, 'likePost']);
-
 });
 
 Route::get('/check-login', [LoginController::class, 'checkLogin']);
