@@ -56,8 +56,10 @@
                         <div v-if="restore">
                             <b-card no-body class="text-center">
                                 <div class="bg-danger text-light">
-                                    {{message}}
-                                    <div class="d-inline p-2" @click="restoreBlog(restore_id)"><i class="bi bi-arrow-clockwise"></i>UNDO</div>
+                                    {{ message }}
+                                    <div class="d-inline p-2" @click="restoreBlog(restore_id)"><i
+                                        class="bi bi-arrow-clockwise"></i>UNDO
+                                    </div>
                                 </div>
                             </b-card>
                         </div>
@@ -75,13 +77,15 @@
                                     </thead>
                                     <tbody>
                                     <tr v-for="blog in blogs">
-                                        <td>{{blog.title}}</td>
-                                        <td>{{blog.author.username}}</td>
-                                        <td>{{blog.category.name}}</td>
+                                        <td>{{ blog.title }}</td>
+                                        <td>{{ blog.author.username }}</td>
+                                        <td>{{ blog.category.name }}</td>
                                         <td>
 
-                                            <div class="d-inline p-2"><i class="bi bi-pencil-square" :id="blog.id"></i></div>
-                                            <div class="d-inline p-2"><i class="bi bi-trash3" :id="blog.id" @click="deleteBlog(blog.id)"></i></div>
+                                            <div class="d-inline p-2"><i class="bi bi-pencil-square" :id="blog.id"></i>
+                                            </div>
+                                            <div class="d-inline p-2"><i class="bi bi-trash3" :id="blog.id"
+                                                                         @click="deleteBlog(blog.id)"></i></div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -127,8 +131,7 @@ export default {
             formData.append('title', this.form.title)
             formData.append('description', this.form.description)
             formData.append('category', this.form.category)
-            formData.append('type', 'storeBlog')
-            axios.post('/api/blog-handle/', formData).then((response) => {
+            axios.post('/api/store-blog/', formData).then((response) => {
                 this.restore = false
                 this.restore_id = ''
                 this.message = ''
@@ -149,14 +152,14 @@ export default {
                 this.show = true
             })
         },
-        clearForm(){
+        clearForm() {
             this.form.title = ''
-            this.form.image = ''
+            this.form.image = null
             this.form.category = null
             this.form.description = null
         },
         getCategories() {
-            axios.post('/api/blog-handle/',{type:'getCategories'}).then((res) => {
+            axios.get('/api/get-categories/').then((res) => {
                 let list = [{text: 'Select One', value: null}];
                 $.each(res.data.categories, function (key, val) {
                     list.push({text: val.name, value: val.id})
@@ -168,17 +171,17 @@ export default {
             })
         },
         getBlogs() {
-            axios.post('/api/blog-handle/',{type:'getBlogs'}).then((res) => {
+            axios.get('/api/get-blogs/').then((res) => {
                 this.blogs = res.data
             }).catch((error) => {
                 console.log(error)
             })
         },
-        deleteBlog(id){
-            axios.post('/api/blog-handle/', {id:id, type:'deleteBlog'}).then((res) => {
-                if (res.data.success === true){
+        deleteBlog(id) {
+            axios.post('/api/delete-blog/', {id: id}).then((res) => {
+                if (res.data.success === true) {
                     this.restore = true
-                    this.restore_id = res.data.blog_id
+                    this.restore_id = id
                     this.message = res.data.message
                 }
                 this.getBlogs()
@@ -186,9 +189,9 @@ export default {
                 console.log(error)
             })
         },
-        restoreBlog(id){
-            axios.post('/api/blog-handle/', {id:id, type:'restoreBlog'}).then((res) => {
-                if (res.data.success === true){
+        restoreBlog(id) {
+            axios.post('/api/restore-blog/', {id: id}).then((res) => {
+                if (res.data.success === true) {
                     this.restore = false
                     this.restore_id = ''
                     this.message = ''

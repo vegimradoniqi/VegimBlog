@@ -2,56 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\BlogsClass;
-use App\Models\Blogs;
-use App\Models\Categories;
+use App\Repositories\Interfaces\BlogRepositoryInterface;
+use App\Repositories\Interfaces\BlogsServiceRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
-    public function blogHandle(Request $request)
+    private BlogRepositoryInterface $blogRespository;
+    private BlogsServiceRepositoryInterface $blogServiceRepository;
+
+    public function __construct(BlogRepositoryInterface $blogRespository, BlogsServiceRepositoryInterface $blogServiceRepository)
     {
-        if (!empty($request)) {
-            return (new BlogsClass())->setInput($request)->handle()->getResponse();
-        } else {
-            return response()->json('error', 500);
-        }
+        $this->blogRespository = $blogRespository;
+        $this->blogServiceRepository = $blogServiceRepository;
+    }
+
+    public function storeBlog(Request $request)
+    {
+        return $this->blogRespository->storeBlog($request);
+    }
+
+    public function deleteBlog(Request $request)
+    {
+        return $this->blogRespository->deleteBlog($request->id);
+    }
+
+    public function restoreBlog(Request $request)
+    {
+        return $this->blogRespository->restoreBlog($request->id);
+    }
+
+    public function editBlog(Request $request)
+    {
+        return $this->blogRespository->editBlog($request);
+    }
+
+    public function getCategories()
+    {
+        return $this->blogServiceRepository->getCategories();
+    }
+
+    public function getBlogs()
+    {
+        return $this->blogServiceRepository->getBlogs();
     }
 
     public function getAllBlogs()
     {
-        $blogs = Blogs::with('author')->with('category')->get();
-        return response()->json($blogs,200);
+        return $this->blogServiceRepository->getAllBlogs();
     }
 
     public function getBlogByCategory(Request $request)
     {
-        $blogs = Blogs::where('category_id',$request->category_id)
-            ->with('author')
-            ->with('category')->paginate(10);
-
-        return response()->json($blogs,200);
+        return $this->blogServiceRepository->getBlogByCategory($request->category_id);
     }
 
     public function filterBlog(Request $request)
     {
-        if (!empty($request->keyword))
-        {
-            $filteredBlogs= Blogs::join('categories', 'blogs.category_id', 'categories.id')
-                ->where('blogs.title', 'like', '%' . $request->keyword . '%')
-                ->orWhere('categories.name', 'like', '%' . $request->keyword . '%')
-                ->selet('blogs.*')
-                ->with('author')
-                ->with('category')
-                ->paginate(10);
-        } else {
-            $filteredBlogs = Blogs::with('author')
-                ->with('category')
-                ->paginate(10);
-        }
-
-
-        return response()->json($filteredBlogs, 200);
+        return $this->blogServiceRepository->filterBlog($request->keyword);
     }
 }

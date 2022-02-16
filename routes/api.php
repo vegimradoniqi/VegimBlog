@@ -32,8 +32,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-
-    Route::post('/blog-handle', [BlogController::class, 'blogHandle']);
+    Route::post('/store-blog', [BlogController::class, 'storeBlog']);
+    Route::post('/delete-blog', [BlogController::class, 'deleteBlog']);
+    Route::post('/restore-blog', [BlogController::class, 'restoreBlog']);
+    Route::post('/edit-blog', [BlogController::class, 'editBlog']);
+    Route::get('/get-blogs', [BlogController::class, 'getBlogs']);
+    Route::get('/get-categories', [BlogController::class, 'getCategories']);
     Route::get('/blog-like/{id}', [LikeController::class, 'likePost']);
 });
 

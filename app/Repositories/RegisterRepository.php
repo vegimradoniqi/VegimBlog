@@ -6,13 +6,14 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Interfaces\RegisterRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterRepository implements RegisterRepositoryInterface
 {
-    public function register($registerDetails)
+    public function register($registerDetails): JsonResponse
     {
-        if (User::get()->count() == 0){
+        if (User::get()->count() == 0) {
             $role = 'editor';
         } else {
             $role = 'reader';
@@ -32,6 +33,6 @@ class RegisterRepository implements RegisterRepositoryInterface
         return response()->json([
             "success" => true,
             "message" => "Registration went successfully, please take a look to your email for completing the verfication."],
-        200);
+            200);
     }
 }

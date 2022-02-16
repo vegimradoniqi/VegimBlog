@@ -7,11 +7,12 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Repositories\Interfaces\LoginRepositoryInterface;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class LoginRepository implements LoginRepositoryInterface
 {
-    public function login($loginDetails)
+    public function login($loginDetails): JsonResponse
     {
         $user = User::where('username', $loginDetails->username)->first();
 
@@ -51,7 +52,7 @@ class LoginRepository implements LoginRepositoryInterface
         Auth::logout();
     }
 
-    public function checkLogin()
+    public function checkLogin(): JsonResponse
     {
         if (Auth::check()) {
             return response()->json(['success' => true], 200);
