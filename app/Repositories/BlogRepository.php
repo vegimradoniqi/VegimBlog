@@ -23,7 +23,7 @@ class BlogRepository implements BlogRepositoryInterface
         $blog = new Blogs();
         $blog->title = $blogData->title;
         $blog->category_id = $blogData->category;
-        $blog->description = $blogData->title;
+        $blog->description = $blogData->description;
         if (isset($filename)) {
             $blog->image = $filename;
         }
@@ -65,7 +65,7 @@ class BlogRepository implements BlogRepositoryInterface
         }
         $blog->title = $blogData->title;
         $blog->category_id = $blogData->category;
-        $blog->description = $blogData->title;
+        $blog->description = $blogData->description;
         if (isset($filename)) {
             $blog->image = $filename;
         }
